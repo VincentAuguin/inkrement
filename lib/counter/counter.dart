@@ -1,4 +1,6 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:inkrement/counter/bump_text.dart';
 
 class Counter extends StatefulWidget {
   const Counter({Key? key, required this.title, required this.count})
@@ -30,12 +32,12 @@ class _CounterState extends State<Counter> {
           widget.title,
           style: const TextStyle(fontSize: 24),
         ),
-        const SizedBox(height: 16),
-        Text(
-          _count.toString(),
-          style: const TextStyle(fontSize: 96),
+        const SizedBox(height: 24),
+        BumpIntText(
+          value: _count,
+          textStyle: const TextStyle(fontSize: 96),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
         ElevatedButton(
             onPressed: _increment,
             style: ElevatedButton.styleFrom(

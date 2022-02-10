@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inkrement/counter/counterWidget.dart';
+import 'package:inkrement/counter/counter.dart';
+import 'package:inkrement/theme/theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,9 +18,7 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: getTheme(),
       home: const Scaffold(
         body:
             Center(child: Counter(title: "How many times I rebuild", count: 0)),
