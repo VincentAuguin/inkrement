@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class BumpIntText extends StatefulWidget {
@@ -16,10 +17,10 @@ class BumpIntText extends StatefulWidget {
 
 class _BumpIntTextState extends State<BumpIntText>
     with SingleTickerProviderStateMixin {
-  static const Duration ANIMATION_DURATION = Duration(milliseconds: 750);
+  static const Duration animationDuration = Duration(milliseconds: 750);
 
   late final AnimationController _controller = AnimationController(
-    duration: ANIMATION_DURATION,
+    duration: animationDuration,
     vsync: this,
   );
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
@@ -45,7 +46,7 @@ class _BumpIntTextState extends State<BumpIntText>
     if (_actualValueOpacity == 0.0) {
       Timer(
           Duration(
-              milliseconds: (ANIMATION_DURATION.inMilliseconds * 0.3).toInt()),
+              milliseconds: (animationDuration.inMilliseconds * 0.3).toInt()),
           () {
         setState(() {
           _actualValueOpacity = 1.0;
@@ -97,16 +98,19 @@ class _BumpIntTextState extends State<BumpIntText>
             opacity: _previousValueOpacityAnimation,
             child: SlideTransition(
                 position: _offsetAnimation,
-                child: Text(
+                child: AutoSizeText(
                   _previousValue.toString(),
                   style: effectiveTextStyle,
                   textAlign: TextAlign.center,
+                  maxLines: 1,
                 ))),
         Opacity(
             opacity: _actualValueOpacity,
-            child: Text(
+            child: AutoSizeText(
               widget.value.toString(),
               style: effectiveTextStyle,
+              textAlign: TextAlign.center,
+              maxLines: 1,
             ))
       ],
     ));
