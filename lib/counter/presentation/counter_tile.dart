@@ -34,6 +34,14 @@ class _CounterTileState extends State<CounterTile> {
   }
 
   @override
+  void didUpdateWidget(covariant CounterTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      _count = widget.counter.value;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(20),
@@ -50,6 +58,7 @@ class _CounterTileState extends State<CounterTile> {
               maxLines: 4,
               minFontSize: 14,
               overflow: TextOverflow.ellipsis,
+              wrapWords: false,
             ),
             BumpIntText(
               value: _count,
@@ -61,12 +70,7 @@ class _CounterTileState extends State<CounterTile> {
                   shape: const CircleBorder(),
                   padding: const EdgeInsets.all(10),
                 ),
-                child: const AutoSizeText(
-                  "+1",
-                  maxLines: 1,
-                  minFontSize: 24,
-                  style: TextStyle(fontSize: 32),
-                ))
+                child: const Icon(Icons.arrow_upward))
           ],
         ));
   }

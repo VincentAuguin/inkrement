@@ -1,16 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:inkrement/counter/domain/counter_adapter.dart';
+import 'package:inkrement/counter/domain/counter_service.dart';
+import 'package:inkrement/shared/presentation/no_content.dart';
 
 import '../domain/counter.dart';
 import 'counter_tile.dart';
 
-class CounterGrid extends StatelessWidget {
-  const CounterGrid({Key? key, required this.counterAdapter}) : super(key: key);
+class CounterGrid extends StatefulWidget {
+  const CounterGrid(
+      {Key? key, required this.counterService, required this.routeObserver})
+      : super(key: key);
 
-  final CounterAdapter counterAdapter;
+  final CounterService counterService;
+
+  final RouteObserver routeObserver;
+
+  @override
+  State<StatefulWidget> createState() => _CounterGridState();
+}
+
+class _CounterGridState extends State<CounterGrid> with RouteAware {
+  late List<Counter> _counters;
+
+  Future<void> _fetchCounters() async {
+    List<Counter> result = await widget.counterService.getAll();
+    setState(() {
+      _counters = result;
+    });
+  }
 
   void _incrementCounter(Counter counter, int value) {
-    counterAdapter.updateValue(counter, value);
+    widget.counterService.updateValue(counter, value);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _counters = [];
+    _fetchCounters();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    widget.routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    super.didPop();
+    _fetchCounters();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+        child: _counters.isNotEmpty
+            ? _buildGridView(_counters)
+            : SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: SizedBox(
+                    child: const Center(
+                      child: NoContent("No counters"),
+                    ),
+                    height: MediaQuery.of(context).size.height)),
+        onRefresh: _fetchCounters);
   }
 
   Widget _buildGridView(Iterable<Counter> counters) {
@@ -25,18 +78,5 @@ class CounterGrid extends StatelessWidget {
             (index) => CounterTile(
                 counter: counters.elementAt(index),
                 onIncrement: _incrementCounter)));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Iterable<Counter>>(
-        future: counterAdapter.getAll(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _buildGridView(snapshot.data!);
-          } else {
-            return const Text("Empty here");
-          }
-        });
   }
 }
