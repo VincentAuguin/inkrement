@@ -50,10 +50,8 @@ class InkrementApp extends StatelessWidget {
               counterService: counterService,
               routeObserver: routeObserver,
             );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
           } else {
-            return const Text("Something went wrong with app init");
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),

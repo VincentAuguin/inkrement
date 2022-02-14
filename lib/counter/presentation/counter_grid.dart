@@ -20,10 +20,15 @@ class CounterGrid extends StatefulWidget {
 
 class _CounterGridState extends State<CounterGrid> with RouteAware {
   late List<Counter> _counters;
+  late bool _isLoading;
 
   Future<void> _fetchCounters() async {
+    setState(() {
+      _isLoading = true;
+    });
     List<Counter> result = await widget.counterService.getAll();
     setState(() {
+      _isLoading = false;
       _counters = result;
     });
   }
@@ -36,6 +41,7 @@ class _CounterGridState extends State<CounterGrid> with RouteAware {
   void initState() {
     super.initState();
     _counters = [];
+    _isLoading = false;
     _fetchCounters();
   }
 
@@ -53,9 +59,15 @@ class _CounterGridState extends State<CounterGrid> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    return _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _buildData();
+  }
+
+  Widget _buildData() {
     return RefreshIndicator(
         child: _counters.isNotEmpty
-            ? _buildGridView(_counters)
+            ? _buildGridView()
             : SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: SizedBox(
@@ -66,7 +78,7 @@ class _CounterGridState extends State<CounterGrid> with RouteAware {
         onRefresh: _fetchCounters);
   }
 
-  Widget _buildGridView(Iterable<Counter> counters) {
+  Widget _buildGridView() {
     return GridView.count(
         crossAxisCount: 2,
         mainAxisSpacing: 10,
@@ -74,9 +86,9 @@ class _CounterGridState extends State<CounterGrid> with RouteAware {
         childAspectRatio: 0.5,
         padding: const EdgeInsets.all(16),
         children: List.generate(
-            counters.length,
+            _counters.length,
             (index) => CounterTile(
-                counter: counters.elementAt(index),
+                counter: _counters.elementAt(index),
                 onIncrement: _incrementCounter)));
   }
 }
