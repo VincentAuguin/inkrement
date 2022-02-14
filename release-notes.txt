@@ -1,3 +1,5 @@
-Create a new counter
+Add progress indicator when loading data
 
-Increment a counter
+Avoid bumper glitch
+
+Change app launcher icon
