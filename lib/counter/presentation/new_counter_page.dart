@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:inkrement/counter/domain/counter_service.dart';
 import 'package:inkrement/counter/presentation/new_counter_form.dart';
 
 class NewCounterPage extends StatelessWidget {
-  const NewCounterPage({Key? key, required this.counterService})
-      : super(key: key);
+  const NewCounterPage({Key? key}) : super(key: key);
 
-  final CounterService counterService;
+  static const String route = '/new';
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +12,10 @@ class NewCounterPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text("New counter"),
         ),
-        body: SafeArea(
+        body: const SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Center(
-                child: NewCounterForm(
-              counterService: counterService,
-            )),
+            padding: EdgeInsets.all(20),
+            child: Center(child: NewCounterForm()),
           ),
         ));
   }

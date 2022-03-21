@@ -1,31 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inkrement/auth/data/firebase_auth_service.dart';
-import 'package:inkrement/auth/domain/auth_service.dart';
-import 'package:inkrement/counter/domain/counter_service.dart';
-import 'package:inkrement/home/presentation/home_page.dart';
+import 'package:inkrement/shared/data/services.dart';
+import 'package:inkrement/shared/presentation/routes.dart';
 
-import 'counter/data/firestore_counter_service.dart';
 import 'shared/presentation/theme.dart';
 
 void main() {
-  AuthService authService = FirebaseAuthService();
-  CounterService counterService = FirestoreCounterService(authService);
-  runApp(InkrementApp(
-    authService: authService,
-    counterService: counterService,
-  ));
+  runApp(const InkrementApp());
 }
 
 class InkrementApp extends StatelessWidget {
-  const InkrementApp(
-      {Key? key, required this.authService, required this.counterService})
-      : super(key: key);
-
-  final AuthService authService;
-
-  final CounterService counterService;
+  const InkrementApp({Key? key}) : super(key: key);
 
   Future<void> _init() async {
     await Firebase.initializeApp();
@@ -38,24 +24,22 @@ class InkrementApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    final RouteObserver<PageRoute> routeObserver = RouteObserver();
-    return MaterialApp(
-      title: 'Inkrement',
-      theme: getTheme(),
-      home: FutureBuilder(
-        future: _init(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return HomePage(
-              counterService: counterService,
-              routeObserver: routeObserver,
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-      navigatorObservers: [routeObserver],
+    _init();
+    return FutureBuilder(
+      future: _init(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp(
+            title: 'Inkrement',
+            theme: getTheme(),
+            initialRoute: '/',
+            routes: routes,
+            navigatorObservers: [routeObserver],
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

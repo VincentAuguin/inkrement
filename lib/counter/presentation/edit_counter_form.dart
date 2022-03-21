@@ -1,25 +1,27 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:inkrement/counter/domain/counter.dart';
 import 'package:inkrement/shared/data/services.dart';
 
-class NewCounterForm extends StatefulWidget {
-  const NewCounterForm({Key? key}) : super(key: key);
+class EditCounterForm extends StatefulWidget {
+  const EditCounterForm({Key? key, required this.counter}) : super(key: key);
+
+  final Counter counter;
 
   @override
-  State<StatefulWidget> createState() => _NewCounterFormState();
+  State<StatefulWidget> createState() => _EditCounterFormState();
 }
 
-class _NewCounterFormState extends State<NewCounterForm> {
+class _EditCounterFormState extends State<EditCounterForm> {
   final TextEditingController _controller = TextEditingController();
 
-  void _createCounter() {
-    counterService
-        .create(_controller.text)
-        .then((value) => Navigator.pop(context));
+  void _updateCounterTitle(String title) {
+    counterService.updateTitle(widget.counter, title);
   }
 
   @override
   Widget build(BuildContext context) {
+    _controller.value = TextEditingValue(text: widget.counter.title);
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       TextField(
         controller: _controller,
@@ -27,12 +29,13 @@ class _NewCounterFormState extends State<NewCounterForm> {
         maxLines: 3,
         style: const TextStyle(fontSize: 24),
         decoration: const InputDecoration(hintText: "Title"),
+        onChanged: _updateCounterTitle,
       ),
       const SizedBox(height: 32),
       ElevatedButton(
-        onPressed: _createCounter,
+        onPressed: () => Navigator.pop(context),
         child: const AutoSizeText(
-          "Create",
+          "Done",
           maxLines: 1,
           style: TextStyle(fontSize: 18),
         ),

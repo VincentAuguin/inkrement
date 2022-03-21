@@ -35,6 +35,12 @@ class FirestoreCounterService implements CounterService {
   }
 
   @override
+  Future<void> updateTitle(Counter counter, String title) {
+    return getCollection().doc(counter.id).update(
+        {"title": title, "updatedAt": DateTime.now().millisecondsSinceEpoch});
+  }
+
+  @override
   Future<void> create(String title) {
     final User? user = _authService.getUser();
     if (user != null) {

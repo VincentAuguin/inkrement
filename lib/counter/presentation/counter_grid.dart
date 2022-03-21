@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:inkrement/counter/domain/counter_service.dart';
+import 'package:inkrement/shared/data/services.dart';
 import 'package:inkrement/shared/presentation/no_content.dart';
 
+import '../../shared/presentation/routes.dart';
 import '../domain/counter.dart';
 import 'counter_tile.dart';
 
 class CounterGrid extends StatefulWidget {
-  const CounterGrid(
-      {Key? key, required this.counterService, required this.routeObserver})
-      : super(key: key);
-
-  final CounterService counterService;
-
-  final RouteObserver routeObserver;
+  const CounterGrid({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CounterGridState();
@@ -26,7 +21,7 @@ class _CounterGridState extends State<CounterGrid> with RouteAware {
     setState(() {
       _isLoading = true;
     });
-    List<Counter> result = await widget.counterService.getAll();
+    List<Counter> result = await counterService.getAll();
     setState(() {
       _isLoading = false;
       _counters = result;
@@ -34,7 +29,7 @@ class _CounterGridState extends State<CounterGrid> with RouteAware {
   }
 
   void _incrementCounter(Counter counter, int value) {
-    widget.counterService.updateValue(counter, value);
+    counterService.updateValue(counter, value);
   }
 
   @override
@@ -48,7 +43,7 @@ class _CounterGridState extends State<CounterGrid> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    widget.routeObserver.subscribe(this, ModalRoute.of(context)!);
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
   @override
