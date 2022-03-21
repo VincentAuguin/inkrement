@@ -1,5 +1,1 @@
-Add progress indicator when loading data
-
-Avoid bumper glitch
-
-Change app launcher icon
+Fix tests

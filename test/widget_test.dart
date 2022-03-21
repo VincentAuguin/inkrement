@@ -7,24 +7,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:inkrement/main.dart';
+import 'package:inkrement/counter/domain/counter.dart';
+import 'package:inkrement/counter/presentation/counter_tile.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const InkrementApp());
+  group("CounterTile", () {
+    testWidgets('value should be incremented', (WidgetTester tester) async {
+      await tester.pumpWidget(CounterTile(
+          counter: Counter(null, "test", "Test", 5),
+          onIncrement: (counter, value) {}));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      expect(find.text('5'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      await tester.tap(find.byIcon(Icons.arrow_upward));
+      await tester.pump(const Duration(seconds: 1));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsWidgets);
+      expect(find.text('5'), findsNothing);
+      expect(find.text('6'), findsWidgets);
+    });
   });
 }

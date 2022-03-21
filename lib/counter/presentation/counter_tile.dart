@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:inkrement/counter/presentation/bump_text.dart';
 import 'package:inkrement/counter/domain/counter.dart';
+import 'package:inkrement/counter/presentation/bump_text.dart';
 
 class CounterTile extends StatefulWidget {
   const CounterTile(
